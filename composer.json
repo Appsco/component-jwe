@@ -1,0 +1,14 @@
+{
+    "name": "bwc/component-jwe",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-0": {
+            "BWC\\Component\\Jwe\\": "src/",
+            "BWC\\Component\\Jwe\\Test": "test/"
+        }
+    }, 
+    "require": {
+
+    }
+}

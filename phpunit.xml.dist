@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="autoload.php" color="true">
+    <testsuites>
+        <testsuite name="BwcComponentJwe">
+            <directory suffix="Test.php">./test/Bwc/Component/Jwe/Test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
