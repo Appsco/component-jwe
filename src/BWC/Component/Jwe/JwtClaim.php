@@ -2,7 +2,7 @@
 
 namespace BWC\Component\Jwe;
 
-final class Claim
+final class JwtClaim
 {
     const ISSUER = 'iss';
 

@@ -11,8 +11,9 @@ class Jwt extends Jose
      */
     public function __construct(array $header = array(), array $payload = array())
     {
+        $header[JwsHeader::TYPE] = 'JWT';
+
         parent::__construct($header, $payload);
-        $this->setType('JWT');
     }
 
 
@@ -38,7 +39,7 @@ class Jwt extends Jose
      */
     public function setIssuer($issuer)
     {
-        return $this->set(Claim::ISSUER, (string)$issuer);
+        return $this->set(JwtClaim::ISSUER, (string)$issuer);
     }
 
     /**
@@ -46,7 +47,7 @@ class Jwt extends Jose
      */
     public function getIssuer()
     {
-        return $this->get(Claim::ISSUER);
+        return $this->get(JwtClaim::ISSUER);
     }
 
     /**
@@ -55,7 +56,7 @@ class Jwt extends Jose
      */
     public function setSubject($subject)
     {
-        return $this->set(Claim::SUBJECT, (string)$subject);
+        return $this->set(JwtClaim::SUBJECT, (string)$subject);
     }
 
     /**
@@ -63,7 +64,7 @@ class Jwt extends Jose
      */
     public function getSubject()
     {
-        return $this->get(Claim::SUBJECT);
+        return $this->get(JwtClaim::SUBJECT);
     }
 
     /**
@@ -72,7 +73,7 @@ class Jwt extends Jose
      */
     public function setAudience($audience)
     {
-        return $this->set(Claim::AUDIENCE, (string)$audience);
+        return $this->set(JwtClaim::AUDIENCE, (string)$audience);
     }
 
     /**
@@ -80,7 +81,7 @@ class Jwt extends Jose
      */
     public function getAudience()
     {
-        return $this->get(Claim::AUDIENCE);
+        return $this->get(JwtClaim::AUDIENCE);
     }
 
     /**
@@ -92,7 +93,7 @@ class Jwt extends Jose
         if ($expirationTime instanceof \DateTime) {
             $expirationTime = $expirationTime->getTimestamp();
         }
-        return $this->set(Claim::EXPIRATION_TIME, ($expirationTime));
+        return $this->set(JwtClaim::EXPIRATION_TIME, ($expirationTime));
     }
 
     /**
@@ -100,7 +101,7 @@ class Jwt extends Jose
      */
     public function getExpirationTime()
     {
-        return $this->get(Claim::EXPIRATION_TIME);
+        return $this->get(JwtClaim::EXPIRATION_TIME);
     }
 
     /**
@@ -112,7 +113,7 @@ class Jwt extends Jose
         if ($notBefore instanceof \DateTime) {
             $notBefore = $notBefore->getTimestamp();
         }
-        return $this->set(Claim::NOT_BEFORE, ($notBefore));
+        return $this->set(JwtClaim::NOT_BEFORE, ($notBefore));
     }
 
     /**
@@ -120,7 +121,7 @@ class Jwt extends Jose
      */
     public function getNotBefore()
     {
-        return $this->get(Claim::NOT_BEFORE);
+        return $this->get(JwtClaim::NOT_BEFORE);
     }
 
 
@@ -133,15 +134,15 @@ class Jwt extends Jose
         if ($issuedAt instanceof \DateTime) {
             $issuedAt = $issuedAt->getTimestamp();
         }
-        return $this->set(Claim::ISSUED_AT, ($issuedAt));
+        return $this->set(JwtClaim::ISSUED_AT, ($issuedAt));
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getIssuedAt()
     {
-        return $this->get(Claim::ISSUED_AT);
+        return intval($this->get(JwtClaim::ISSUED_AT));
     }
 
     /**
@@ -150,7 +151,7 @@ class Jwt extends Jose
      */
     public function setJwtId($jwdId)
     {
-        return $this->set(Claim::JWT_ID, $jwdId);
+        return $this->set(JwtClaim::JWT_ID, $jwdId);
     }
 
     /**
@@ -158,7 +159,7 @@ class Jwt extends Jose
      */
     public function getJwtId()
     {
-        return $this->get(Claim::JWT_ID);
+        return $this->get(JwtClaim::JWT_ID);
     }
 
     /**
@@ -167,7 +168,7 @@ class Jwt extends Jose
      */
     public function setType($type)
     {
-        return $this->set(Claim::TYPE, $type);
+        return $this->set(JwtClaim::TYPE, $type);
     }
 
     /**
@@ -175,34 +176,9 @@ class Jwt extends Jose
      */
     public function getType()
     {
-        return $this->get(Claim::TYPE);
+        return $this->get(JwtClaim::TYPE);
     }
 
-
-    /**
-     * @param string|null $name
-     * @param mixed $value
-     * @return Jwt|$this
-     */
-    public function set($name, $value)
-    {
-        if ($value) {
-            $this->payload[$name] = $value;
-        } else {
-            unset($this->payload[$name]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return mixed
-     */
-    public function get($name)
-    {
-        return @$this->payload[$name];
-    }
 
 
 } 

@@ -2,7 +2,7 @@
 
 namespace BWC\Component\Jwe;
 
-final class Header
+final class JwsHeader
 {
     /**
      * Type of the object

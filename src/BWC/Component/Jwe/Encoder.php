@@ -56,7 +56,7 @@ class Encoder
             throw new \InvalidArgumentException('Invalid algorithm');
         }
 
-        $jose->headerSet(Header::ALGORITHM, $algorithm);
+        $jose->headerSet(JwsHeader::ALGORITHM, $algorithm);
 
         $signing_input = $jose->getSigningInput();
 
@@ -67,15 +67,19 @@ class Encoder
     }
 
 
-
-
-    public function decode($jwt, $key)
+    /**
+     * @param string $jwtString
+     * @param string|null $key
+     * @return JwtReceived
+     * @throws JweException
+     */
+    public function decode($jwtString, $key = null)
     {
-        if (!strpos($jwt, '.')) {
+        if (!strpos($jwtString, '.')) {
             throw new JweException('Not a valid JWE');
         }
 
-        $arr = explode('.', $jwt);
+        $arr = explode('.', $jwtString);
 
         // TODO this will change with support for encryption, atm it can handle JWT only
         if (count($arr) != 3) {
@@ -92,23 +96,38 @@ class Encoder
             throw new JweException('Invalid JWE payload');
         }
 
+        $signature = UrlSafeB64Encoder::decode($cryptoB64);
+
         // TODO this will change with support for encryption, atm it can handle JWT only
-        $result = new Jwt($header, $payload);
+        $result = new JwtReceived("$headB64.$payloadB64", $signature, $header, $payload);
 
-        $result->setSignature(UrlSafeB64Encoder::decode($cryptoB64));
-
-        if (!$result->headerGet(Header::ALGORITHM)) {
-            throw new JweException('Algorithm not specified in header');
-        }
-
-        if (!$this->verifySignature($result->getSignature(), "$headB64.$payloadB64", $key, $result->headerGet(Header::ALGORITHM))) {
-            throw new JweException('Invalid signature');
+        if ($key) {
+            $this->verify($result, $key);
         }
 
         return $result;
     }
 
-    public function verifySignature($signature, $input, $key, $algorithm = null)
+
+    /**
+     * @param JoseReceivedInterface $jose
+     * @param string $key
+     * @throws JweException
+     */
+    public function verify(JoseReceivedInterface $jose, $key)
+    {
+        if (!$jose->getSigningAlgorithm()) {
+            throw new JweException('Algorithm not specified');
+        }
+
+        if (!$this->verifySignature($jose->getSignature(), $jose->getSigningInput(), $key, $jose->getSigningAlgorithm())) {
+            throw new JweException('Invalid signature');
+        }
+    }
+
+
+
+    protected function verifySignature($signature, $input, $key, $algorithm = null)
     {
         $algorithm = $algorithm ? $algorithm : $this->getDefaultAlgorithm();
 

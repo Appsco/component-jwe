@@ -10,9 +10,6 @@ abstract class Jose
     /** @var  mixed */
     protected $payload;
 
-    /** @var  string|null */
-    protected $signature;
-
 
     public function __construct(array $header = array(), $payload = null)
     {
@@ -78,22 +75,32 @@ abstract class Jose
         return $this->payload;
     }
 
+
+
     /**
-     * @param null|string $signature
+     * @param string|null $name
+     * @param mixed $value
+     * @return Jwt|$this
      */
-    public function setSignature($signature)
+    public function set($name, $value)
     {
-        $this->signature = $signature;
+        if ($value) {
+            $this->payload[$name] = $value;
+        } else {
+            unset($this->payload[$name]);
+        }
+
+        return $this;
     }
 
     /**
-     * @return null|string
+     * @param string $name
+     * @return mixed
      */
-    public function getSignature()
+    public function get($name)
     {
-        return $this->signature;
+        return @$this->payload[$name];
     }
-
 
 
 
