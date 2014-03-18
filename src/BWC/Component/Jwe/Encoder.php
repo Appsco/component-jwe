@@ -3,7 +3,7 @@
 namespace BWC\Component\Jwe;
 
 
-class Encoder
+class Encoder implements EncoderInterface
 {
     /** @var string */
     protected $defaultAlgorithm = Algorithm::HS256;
