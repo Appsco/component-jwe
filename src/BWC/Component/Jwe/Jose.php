@@ -2,7 +2,7 @@
 
 namespace BWC\Component\Jwe;
 
-abstract class Jose
+abstract class Jose implements \JsonSerializable
 {
     /** @var array  */
     protected $header;
@@ -102,6 +102,16 @@ abstract class Jose
         return @$this->payload[$name];
     }
 
+    /**
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'header' => $this->getHeader(),
+            'payload' => $this->getPayload()
+        );
+    }
 
 
-} 
+}
