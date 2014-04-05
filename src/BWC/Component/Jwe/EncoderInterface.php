@@ -15,17 +15,17 @@ interface EncoderInterface
 
     /**
      * @param string $jwtString
+     * @param string $class
      * @param string|null $key
-     * @return JwtReceived
-     * @throws JweException
+     * @return Jose
      */
-    public function decode($jwtString, $key = null);
+    public function decode($jwtString, $class = '\BWC\Component\Jwe\Jwt', $key = null);
 
     /**
-     * @param JoseReceivedInterface $jose
+     * @param Jose $jose
      * @param string $key
      * @throws JweException
      */
-    public function verify(JoseReceivedInterface $jose, $key);
+    public function verify(Jose $jose, $key);
 
 } 

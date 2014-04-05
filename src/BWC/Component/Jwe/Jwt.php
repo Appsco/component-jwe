@@ -20,7 +20,7 @@ class Jwt extends Jose
     /**
      * @return string
      */
-    public function getSigningInput()
+    public function getMySigningInput()
     {
         $segments = array(
                 UrlSafeB64Encoder::encode(json_encode($this->getHeader())),

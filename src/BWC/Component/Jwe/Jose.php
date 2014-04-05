@@ -10,6 +10,12 @@ abstract class Jose implements \JsonSerializable
     /** @var  mixed */
     protected $payload;
 
+    /** @var  string|null */
+    protected $signingInput;
+
+    /** @var  string|null */
+    protected $signature;
+
 
     public function __construct(array $header = array(), $payload = null)
     {
@@ -21,8 +27,65 @@ abstract class Jose implements \JsonSerializable
     /**
      * @return string
      */
-    abstract public function getSigningInput();
+    abstract protected function getMySigningInput();
 
+
+    /**
+     * @return string
+     */
+    public function getSigningInput()
+    {
+        if ($this->signingInput) {
+            return $this->signingInput;
+        } else {
+            return $this->getMySigningInput();
+        }
+    }
+
+    /**
+     * @param null|string $signingInput
+     */
+    public function setSigningInput($signingInput)
+    {
+        $this->signingInput = $signingInput;
+    }
+
+    /**
+     * @param null|string $signature
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+
+
+
+    /**
+     * @return void
+     */
+    public function clearSigning()
+    {
+        $this->signingInput = null;
+        $this->signature = null;
+        $this->headerUnset(JwsHeader::ALGORITHM);
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSigningAlgorithm()
+    {
+        return $this->headerGet(JwsHeader::ALGORITHM);
+    }
 
 
     /**

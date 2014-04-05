@@ -69,11 +69,12 @@ class Encoder implements EncoderInterface
 
     /**
      * @param string $jwtString
+     * @param string $class
      * @param string|null $key
-     * @return JwtReceived
      * @throws JweException
+     * @return Jose
      */
-    public function decode($jwtString, $key = null)
+    public function decode($jwtString, $class = '\BWC\Component\Jwe\Jwt', $key = null)
     {
         if (!strpos($jwtString, '.')) {
             throw new JweException('Not a valid JWE');
@@ -98,8 +99,13 @@ class Encoder implements EncoderInterface
 
         $signature = UrlSafeB64Encoder::decode($cryptoB64);
 
-        // TODO this will change with support for encryption, atm it can handle JWT only
-        $result = new JwtReceived("$headB64.$payloadB64", $signature, $header, $payload);
+        /** @var Jose $result */
+        $result = new $class($header, $payload);
+        if (false == $result instanceof Jose) {
+            throw new \InvalidArgumentException(sprintf("Specified class '%s' does not extend Jose", $class));
+        }
+        $result->setSigningInput("$headB64.$payloadB64");
+        $result->setSignature($signature);
 
         if ($key) {
             $this->verify($result, $key);
@@ -110,11 +116,11 @@ class Encoder implements EncoderInterface
 
 
     /**
-     * @param JoseReceivedInterface $jose
+     * @param Jose $jose
      * @param string $key
      * @throws JweException
      */
-    public function verify(JoseReceivedInterface $jose, $key)
+    public function verify(Jose $jose, $key)
     {
         if (!$jose->getSigningAlgorithm()) {
             throw new JweException('Algorithm not specified');
