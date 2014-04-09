@@ -28,7 +28,7 @@ class JwtFunctionalTest extends \PHPUnit_Framework_TestCase
 
         $token = $encoder->encode($jwt, $key);
 
-        $jwt = $encoder->decode($token, $key);
+        $jwt = $encoder->decode($token, null, $key);
 
         $this->assertEquals($expectedIssuedAt, $jwt->getIssuedAt());
         $this->assertEquals($expectedIssuer, $jwt->getIssuer());

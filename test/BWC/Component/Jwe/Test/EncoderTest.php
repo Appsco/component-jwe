@@ -5,8 +5,8 @@ namespace BWC\Component\Jwe\Test;
 use BWC\Component\Jwe\Algorithm;
 use BWC\Component\Jwe\Encoder;
 use BWC\Component\Jwe\Jose;
-use BWC\Component\Jwe\JweException;
 use BWC\Component\Jwe\Jwt;
+
 
 class EncoderTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,7 +49,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function shouldEncodeProvider()
+    public function shouldEncodeProviderDataProvider()
     {
         $jwt = new Jwt(array('h1'=>1, 'h2'=>2), array('pl1'=>1, 'pl2'=>2));
         $key = 'secret_key';
@@ -62,7 +62,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider shouldEncodeProvider
+     * @dataProvider shouldEncodeProviderDataProvider
      */
     public function shouldEncode(Jose $jwt, $key, $algorithm, $expectedToken)
     {
@@ -164,7 +164,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
         $expectedPayload = array('pl1'=>1, 'pl2'=>2);
 
         $encoder = new Encoder();
-        $jose = $encoder->decode($token, $key);
+        $jose = $encoder->decode($token, null, $key);
 
         $this->assertArrayHasKey('h1', $jose->getHeader());
         $this->assertArrayHasKey('h2', $jose->getHeader());
@@ -187,7 +187,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
         $expectedPayload = array('pl1'=>1, 'pl2'=>2);
 
         $encoder = new Encoder();
-        $jose = $encoder->decode($token, $key);
+        $jose = $encoder->decode($token, null, $key);
 
         $this->assertArrayHasKey('h1', $jose->getHeader());
         $this->assertArrayHasKey('h2', $jose->getHeader());

@@ -72,10 +72,17 @@ class Encoder implements EncoderInterface
      * @param string $class
      * @param string|null $key
      * @throws JweException
+     * @throws \InvalidArgumentException
      * @return Jose
      */
     public function decode($jwtString, $class = '\BWC\Component\Jwe\Jwt', $key = null)
     {
+        if (!$class) {
+            $class = '\BWC\Component\Jwe\Jwt';
+        }
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(sprintf("Class '%s' does not exist", $class));
+        }
         if (!strpos($jwtString, '.')) {
             throw new JweException('Not a valid JWE');
         }
