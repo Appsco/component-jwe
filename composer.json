@@ -1,5 +1,5 @@
 {
-    "name": "bwc/component-jwe",
+    "name": "appsco/component-jwe",
     "license": "MIT",
     "minimum-stability": "stable",
     "autoload": {
