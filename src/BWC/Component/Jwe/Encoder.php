@@ -25,7 +25,7 @@ class Encoder implements EncoderInterface
     public function setDefaultAlgorithm($defaultAlgorithm)
     {
         if (!Algorithm::isValid($defaultAlgorithm)) {
-            throw new \InvalidArgumentException('Invalid algorithm');
+            throw new \InvalidArgumentException(sprintf("Invalid algorithm '%s'", $defaultAlgorithm));
         }
         $this->defaultAlgorithm = $defaultAlgorithm;
 
@@ -53,7 +53,7 @@ class Encoder implements EncoderInterface
         $algorithm = $algorithm ? $algorithm : $this->getDefaultAlgorithm();
 
         if (false == Algorithm::isValid($algorithm)) {
-            throw new \InvalidArgumentException('Invalid algorithm');
+            throw new \InvalidArgumentException(sprintf("Invalid algorithm '%s'", $algorithm));
         }
 
         $jose->headerSet(JwsHeader::ALGORITHM, $algorithm);
@@ -84,7 +84,7 @@ class Encoder implements EncoderInterface
             throw new \InvalidArgumentException(sprintf("Class '%s' does not exist", $class));
         }
         if (!strpos($jwtString, '.')) {
-            throw new JweException('Not a valid JWE');
+            throw new JweException(sprintf("Not a valid JWE '%s ", $jwtString));
         }
 
         $arr = explode('.', $jwtString);
